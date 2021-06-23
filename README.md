@@ -11,9 +11,9 @@ To get the Node server running locally:
 * Create a `.env` file and reference the `.env.example` file
 * `npm start` or `yarn start` to start the local server
 
-## DB Structure
+## Database
 
-Open [schema](https://drawsql.app/dea/diagrams/Kurangguru)
+Open [database](https://drive.google.com/file/d/10pGBWTXUseKZWZRQAqZMtQubNuNl6Max/view?usp=sharing) and the [schema](https://drawsql.app/dea/diagrams/Kurangguru)
 
 ## Folder Structure
 
