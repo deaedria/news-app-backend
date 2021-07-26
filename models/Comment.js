@@ -10,7 +10,7 @@ const commentModel = {
                     reject(fromResponse("Comment not found", 400))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all Comments success", 200, result?.rows));
+                    resolve(fromResponse("Get all Comments success", 200, result.rows));
                 } else {
                     reject(fromResponse("Get all Comments failed", 500));
                 }

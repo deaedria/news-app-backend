@@ -2,14 +2,14 @@ const hash = require('../hashPassword')
 
 const getNewBody = (req, result) => {
     const {
-        email = result.rows[0]?.email,
-        phone_number = result.rows[0]?.phone_number,
-        about = result.rows[0]?.about,
-        name = result.rows[0]?.name,
-        username = result.rows[0]?.username,
-        job = result.rows[0]?.job,
-        is_author = result.rows[0]?.is_author,
-        role = result.rows[0]?.role
+        email = result.rows[0].email,
+        phone_number = result.rows[0].phone_number,
+        about = result.rows[0].about,
+        name = result.rows[0].name,
+        username = result.rows[0].username,
+        job = result.rows[0].job,
+        is_author = result.rows[0].is_author,
+        role = result.rows[0].role
     } = req.body
 
     const file = req.file?.filename

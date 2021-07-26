@@ -10,7 +10,7 @@ const notifModel = {
                     reject(fromResponse("notification not found", 400))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all notification success", 200, result?.rows));
+                    resolve(fromResponse("Get all notification success", 200, result.rows));
                 } else {
                     reject(fromResponse("Get all notification failed", 500));
                 }

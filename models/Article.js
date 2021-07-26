@@ -10,7 +10,7 @@ const articleModel = {
                     reject(fromResponse("Articles not found", 400))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all Articles success", 200, result?.rows));
+                    resolve(fromResponse("Get all Articles success", 200, result.rows));
                 } else {
                     reject(fromResponse("Get all Articles failed", 500));
                 }
@@ -22,7 +22,7 @@ const articleModel = {
     addNewArticle: (request) => {
         return new Promise((resolve, reject) => {
             const { category_id, author_id, article_title, article_content } = request.body;
-            const photos = request.file?.filename;
+            const photos = request.file.filename;
             pg.query(`SELECT * FROM articles WHERE LOWER(article_title)='${article_title.toLowerCase()}'`, (error, result) => {
                 if (!error) {
                     if (result.rows.length < 1) {
@@ -180,17 +180,17 @@ const articleModel = {
                     reject(fromResponse("article id not found", 400));
                 }
                 if (!error) {
-                    const file = req.file?.filename ? `/upload/article_cover/${req.file.filename}` : result.rows[0].article_cover
+                    const file = req.file.filename ? `/upload/article_cover/${req.file.filename}` : result.rows[0].article_cover
                     const {
-                        category_id = result.rows[0]?.category_id,
-                        author_id = result.rows[0]?.author_id,
-                        article_title = result.rows[0]?.article_title,
-                        article_content = result.rows[0]?.article_content,
-                        status = result.rows[0]?.status,
+                        category_id = result.rows[0].category_id,
+                        author_id = result.rows[0].author_id,
+                        article_title = result.rows[0].article_title,
+                        article_content = result.rows[0].article_content,
+                        status = result.rows[0].status,
                         // publish_date = result.rows[0]?.publish_date,
                     } = req.body
                     const { id } = req.params;
-                    let newBody = { ...req.body, publish_date: result.rows[0]?.publish_date ? result.rows[0].publish_date : status == 'accepted' ? 'now()' : null, article_cover: file }
+                    let newBody = { ...req.body, publish_date: result.rows[0].publish_date ? result.rows[0].publish_date : status == 'accepted' ? 'now()' : null, article_cover: file }
                     if (newBody.article_cover != result.rows[0].article_cover) {
                         fs.unlink(`./public${result.rows[0].article_cover}`, (err1) => {
                             if (!err1) {

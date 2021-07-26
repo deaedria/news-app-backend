@@ -7,11 +7,11 @@ const categoryModel = {
         const { limit = 10, page = 1 } = req.query
         return new Promise((resolve, reject) => {
             pg.query(`SELECT * from categories LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
-                if (result?.rows?.length < 0) {
+                if (result.rows.length < 0) {
                     reject(fromResponse("Category not found", 404))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all Categories success", 200, result?.rows));
+                    resolve(fromResponse("Get all Categories success", 200, result.rows));
                 } else {
                     reject(fromResponse("Get all Categories failed", 500));
                 }
@@ -141,9 +141,9 @@ const categoryModel = {
                     reject(fromResponse("category id not found", 400));
                 }
                 if (!error) {
-                    const file = req.file?.filename ? `/upload/category_cover/${req.file.filename}` : result.rows[0].category_cover
+                    const file = req.file.filename ? `/upload/category_cover/${req.file.filename}` : result.rows[0].category_cover
                     const {
-                        category_name = result.rows[0]?.category_name,
+                        category_name = result.rows[0].category_name,
                     } = req.body
                     const { id } = req.params;
                     let newBody = { ...req.body, category_cover: file }
