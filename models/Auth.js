@@ -1,100 +1,55 @@
 const bcrypt = require("bcrypt");
 const pg = require("../helpers/connect_db");
-const queryAuth = require("../helpers/queryAuth");
 const jwt = require("jsonwebtoken");
-const fromResponse = require("../helpers/formResponse");
+const { login, register } = require("../helpers/user/queryAuth");
+const { formError, formSuccess } = require("../helpers/formResponse");
+const isDataEmpty = require("../helpers/checkDataEmpty");
+const hash = require("../helpers/hashPassword");
 
 const authModel = {
-  login: (request) => {
-    return new Promise((resolve, reject) => {
-      const { password } = request;
-      const query = queryAuth.login(request);
-      pg.query(query, (err, result) => {
-        if (!err) {
-          if (result.rows.length < 1) {
-            reject(fromResponse("Wrong email/password", 400));
-          } else {
-            bcrypt.compare(
-              password,
-              result.rows[0].password,
-              (errComp, resComp) => {
-                if (!errComp) {
-                  if (resComp) {
+    login: (req) => {
+        return new Promise((resolve, reject) => {
+            const { body: { email, password } } = req;
+            if (!email || !password) reject(formError("Request not be empty"), 400)
+            pg.query(login(email), (err, result) => {
+                const { isEmpty } = isDataEmpty(result)
+                if (isEmpty) reject(formError("Wrong email/password", 400))
+                bcrypt.compare(password, result.rows[0]?.password, (errComp, resComp) => {
+                    if (errComp) reject(formError("Login failed", 500))
+                    if (!resComp) reject(formError("Wrong email/password", 400))
                     const payload = {
-                      id: result.rows[0].id,
-                      role: result.rows[0].role,
-                    };
-                    jwt.sign(
-                      payload,
-                      process.env.SECRET_KEY,
-                      (errToken, resToken) => {
-                        if (!errToken) {
-                          resolve(
-                            fromResponse("Login success", 200, {
-                              id: result.rows[0].id,
-                              role: result.rows[0].role,
-                              token: resToken,
-                            })
-                          );
-                        } else {
-                          reject({
-                            message: "Login error",
-                            statusCode: 500,
-                          });
-                        }
-                      }
-                    );
-                  } else {
-                    reject(fromResponse("Wrong email/password", 400));
-                  }
-                } else {
-                  reject(fromResponse("Login failed", 500));
-                }
-              }
-            );
-          }
-        } else {
-          reject(fromResponse("Wrong email/password", 400));
-        }
-      });
-    });
-  },
-
-  register: (request) => {
-    return new Promise((resolve, reject) => {
-      const { email, password, phone_number } = request.body;
-      pg.query(
-        `SELECT email FROM users WHERE email = '${email}'`,
-        (err, value) => {
-          if (!err) {
-            if (value.rows.length < 1) {
-              bcrypt.hash(password, 10, function (errHash, hash) {
-                if (!errHash) {
-                  const newUser = {
-                    email: email,
-                    password: hash,
-                    phone_number: phone_number
-                  };
-                  const query = queryAuth.register(newUser);
-                  pg.query(query, (err) => {
-                    if (!err) {
-                      resolve(fromResponse("Register success", 201));
-                    } else {
-                      reject(fromResponse("Register failed", 500));
+                        id: result.rows[0]?.id,
+                        role: result.rows[0]?.role,
                     }
-                  });
-                } else {
-                  reject(fromResponse("Register failed", 500));
-                }
-              });
-            } else {
-              reject(fromResponse("User exist", 400));
-            }
-          }
-        }
-      );
-    });
-  },
+                    jwt.sign(payload, process.env.SECRET_KEY, (errToken, resToken) => {
+                        if (errToken) reject(formError("Login error", 500))
+                        resolve(formSuccess("Login success", 200, { id: result.rows[0].id, role: result.rows[0].role, token: resToken }))
+                    })
+                });
+            });
+        });
+    },
+
+    register: (req) => {
+        return new Promise((resolve, reject) => {
+            const { body: { email, password, phone_number } } = req;
+            pg.query(login(email), (err, result) => {
+                const { isEmpty } = isDataEmpty(result)
+                if (!isEmpty) reject(formError("User exist", 400))
+                hash(password).then((hashValue) => {
+                    const newUser = {
+                        email: email,
+                        password: hashValue,
+                        phone_number: phone_number
+                    }
+                    pg.query(register(newUser), (err) => {
+                        if (err) reject(formError("Register failed", 500))
+                        resolve(formSuccess("Register success", 201));
+                    })
+                });
+            });
+        });
+    },
 
 };
 
