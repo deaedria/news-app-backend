@@ -14,12 +14,13 @@ const authModel = {
             pg.query(login(email), (err, result) => {
                 const { isEmpty } = isDataEmpty(result)
                 if (isEmpty) reject(formError("Wrong email/password", 400))
-                bcrypt.compare(password, result.rows[0]?.password, (errComp, resComp) => {
+                const { } = result.rows[0]
+                bcrypt.compare(password, result.rows[0].password, (errComp, resComp) => {
                     if (errComp) reject(formError("Login failed", 500))
                     if (!resComp) reject(formError("Wrong email/password", 400))
                     const payload = {
-                        id: result.rows[0]?.id,
-                        role: result.rows[0]?.role,
+                        id: result.rows[0].id,
+                        role: result.rows[0].role,
                     }
                     jwt.sign(payload, process.env.SECRET_KEY, (errToken, resToken) => {
                         if (errToken) reject(formError("Login error", 500))
