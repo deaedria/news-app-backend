@@ -1,36 +1,36 @@
-const notifModel = require("../models/Notification")
+const notificationModel = require("../models/Notification")
 
-const notifController = {
-    getAllNotif: async(req, res) => {
+const notificationController = {
+    getAllNotification: async(req, res) => {
         try {
-            const result = await notifModel.getAllNotif(req)
+            const result = await notificationModel.getAllNotif(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    getNotifById: async(req, res) => {
+    getNotificationById: async(req, res) => {
         try {
-            const result = await notifModel.getNotifById(req.params.id)
+            const result = await notificationModel.getNotifById(req.params.id)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    getNotifListByUserId: async(req, res) => {
+    getNotificationListByUserId: async(req, res) => {
         try {
-            const result = await notifModel.getNotifListByUserId(req.params.id)
+            const result = await notificationModel.getNotifListByUserId(req.params.id)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    deleteNotifById: async(req, res) => {
+    deleteNotificationById: async(req, res) => {
         try {
-            const result = await notifModel.deleteNotifById(req)
+            const result = await notificationModel.deleteNotifById(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
@@ -38,4 +38,4 @@ const notifController = {
     },
 }
 
-module.exports = notifController
+module.exports = notificationController

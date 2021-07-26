@@ -28,18 +28,18 @@ const categoryController = {
         }
     },
 
-    getArtByCategoryId: async(req, res) => {
+    getArticlesByCategoryId: async(req, res) => {
         try {
-            const result = await categoryModel.getArtByCategoryId(req)
+            const result = await categoryModel.getArticlesByCategoryId(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    getArtRecommendByCategoryId: async(req, res) => {
+    getRecommendedArticlesByCategoryId: async(req, res) => {
         try {
-            const result = await categoryModel.getArtRecommendByCategoryId(req)
+            const result = await categoryModel.getRecommendedArticlesByCategoryId(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
