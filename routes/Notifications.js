@@ -1,10 +1,10 @@
 const route = require('express').Router()
-const notifController = require('../controllers/Notification')
+const notificationController = require('../controllers/Notification')
 
-route.get('/:id', notifController.getNotifById)
-route.get('/list/:id', notifController.getNotifListByUserId)
-route.get('/', notifController.getAllNotif)
-route.delete('/remove', notifController.deleteNotifById)
+route.get('/:id', notificationController.getNotificationById)
+route.get('/list/:id', notificationController.getNotificationListByUserId)
+route.get('/', notificationController.getAllNotification)
+route.delete('/remove', notificationController.deleteNotificationById)
 
 
 module.exports=route
