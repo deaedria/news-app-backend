@@ -12,9 +12,9 @@ const getNewBody = (req, result) => {
         role = result.rows[0].role
     } = req.body
 
-    const file = req.file?.filename
+    const file = req.file.filename
         ? `/upload/photo_profile/${req.file.filename}`
-        : result.rows[0]?.photo_profile
+        : result.rows[0].photo_profile
 
     if (req.body?.password) {
         hash(req.body.password).then((value) => {
@@ -23,7 +23,7 @@ const getNewBody = (req, result) => {
             return { email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id }
         })
     }
-    let newBody = { ...req.body, password: result.rows[0]?.password, photo_profile: file, id: req.params.id }
+    let newBody = { ...req.body, password: result.rows[0].password, photo_profile: file, id: req.params.id }
     const { password, photo_profile, id } = newBody
     return { email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id }
 }
