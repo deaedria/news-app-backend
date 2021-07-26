@@ -1,13 +1,11 @@
 const route = require('express').Router()
-const userController = require('../controllers/User')
-const formUpload = require('../helpers/formUpload')
-// const verifyToken = require('../helpers/verifyToken')
+const { uploadPhotoProfile } = require('../helpers/formUpload')
+const { createUser, patchUserById, getUserById, getUsers, deleteUserById } = require('../controllers/User')
 
-route.post('/', formUpload.uploadPhotoProfile, userController.addNewUser)
-route.patch('/:id', formUpload.uploadPhotoProfile, userController.updateUser) 
-route.get('/:id', userController.getUserById)
-route.get('/', userController.getAllUser)
-route.delete('/:id', userController.deleteUserById)
+route.post('/', uploadPhotoProfile, createUser)
+route.patch('/:id', uploadPhotoProfile, patchUserById) 
+route.get('/:id', getUserById)
+route.get('/', getUsers)
+route.delete('/:id', deleteUserById)
 
-
-module.exports=route
+module.exports = route
