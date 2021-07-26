@@ -16,7 +16,7 @@ const getNewBody = (req, result) => {
         ? `/upload/photo_profile/${req.file.filename}`
         : result.rows[0].photo_profile
 
-    if (req.body?.password) {
+    if (req.body.password) {
         hash(req.body.password).then((value) => {
             let newBody = { ...req.body, password: value, photo_profile: file, id: req.params.id }
             const { password, photo_profile, id } = newBody
