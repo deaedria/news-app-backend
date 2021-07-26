@@ -22,7 +22,7 @@ const userModel = {
     createUser: (req) => {
         return new Promise((resolve, reject) => {
             const { body: { email, password, phone_number, about, name, username, job, is_author, role } } = req;
-            const photos = req.file?.filename
+            const photos = req.file.filename
             pg.query(getByEmail(email), (error, result) => {
                 if (error) reject(formError("Add user failed", 500))
                 const { isEmpty } = isDataEmpty(result)
