@@ -14,7 +14,7 @@ const userModel = {
                 const { isEmpty } = isDataEmpty(result)
                 if (isEmpty) reject(formError("Data Not Found", 404))
                 if (err) reject(formError("Get all Users failed", 500))
-                resolve(formSuccess("Get all Users success", 200, result?.rows))
+                resolve(formSuccess("Get all Users success", 200, result.rows))
             });
         });
     },
@@ -72,7 +72,7 @@ const userModel = {
                 if (isEmpty) reject(formError("user id not found", 404))
                 if (error) reject(formResponse("update data failed", 500));
                 const { email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id } = getNewBody(req, result)
-                if (photo_profile != result.rows[0]?.photo_profile) {
+                if (photo_profile != result.rows[0].photo_profile) {
                     unlinkPhoto(result.rows[0].photo_profile)
                     pg.query(updateUser({ email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id }), (err, response) => {
                         if (err) reject(formError("update data failed", 500));
