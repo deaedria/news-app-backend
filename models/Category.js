@@ -23,7 +23,7 @@ const categoryModel = {
     addNewCategory: (request) => {
         return new Promise((resolve, reject) => {
             const { category_name } = request.body;
-            const photos = request.file?.filename;
+            const photos = request.file.filename;
             pg.query(`SELECT * FROM categories WHERE LOWER(category_name)='${category_name.toLowerCase()}'`, (error, result) => {
                 if (!error) {
                     if (result.rows.length < 1) {
