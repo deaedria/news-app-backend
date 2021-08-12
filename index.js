@@ -1,4 +1,5 @@
 // const compression = require('compression')
+require('newrelic');
 const responseTime = require('response-time')  
 const express = require("express");
 const app = express();
