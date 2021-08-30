@@ -29,7 +29,7 @@ app.get("*", (req, res) => {
 
 app.listen(port, () => {
   console.log(
-    `app listening at http://${process.env.HOST || "localhost"}:${port}`
+    `app listening at https://${process.env.HOST || "localhost"}:${port}`
   );
 });
 
