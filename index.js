@@ -1,16 +1,11 @@
 // const compression = require('compression')
 require('newrelic');
-const responseTime = require('response-time')  
 const express = require("express");
 const app = express();
 require("dotenv").config();
 const port = process.env.PORT || 5000;
 const bodyParser = require("body-parser");
 // app.use(compression())
-
-app.use(responseTime((req, res, time) => {  
-  console.log(`${req.method} ${req.originalUrl} ${time}`);  
-}))
 
 app.use(express.static('public'));
 
