@@ -62,7 +62,7 @@ const userModel = {
                 if (isEmpty) reject(formError("User not found", 404))
                 pg.query(deleteById(id), (err, result) => {
                     if (err) reject(formError('Delete user failed', 500))
-                    resolve(formSuccess('Delete user success', 200, result.rows[0]));
+                    resolve(formSuccess('Delete user success', 200, result?.rows[0]));
                 });
             });
         })
