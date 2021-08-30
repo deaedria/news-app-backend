@@ -35,7 +35,7 @@ const authModel = {
             const { email, password, phone_number } = req;
             pg.query(login(email), (err, result) => {
                 const { isEmpty } = isDataEmpty(result)
-                // // if (!isEmpty) reject(formError("User exist", 400))
+                if (!isEmpty) reject(formError("User exist", 400))
                 hash(password).then((hashValue) => {
                     const newUser = {
                         email: email,

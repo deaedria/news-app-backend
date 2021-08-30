@@ -29,7 +29,7 @@ const userModel = {
             pg.query(getByEmail(email), (error, result) => {
                 if (error) reject(formError("Add user failed", 500))
                 const { isEmpty } = isDataEmpty(result)
-                // if (!isEmpty) reject(formError("User exist", 400))
+                if (!isEmpty) reject(formError("User exist", 400))
                 const user = new UserBuilder()
                 user.setEmail(email)
                     .setName(name)
