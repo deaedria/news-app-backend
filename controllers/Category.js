@@ -1,18 +1,24 @@
-const categoryModel = require("../models/Category")
+const { getCategories, 
+    createCategory, 
+    getCategoryById, 
+    getArticlesByCategoryId, 
+    getRecommendedArticlesByCategoryId,
+    deleteCategoryById
+} = require("../models/Category")
 
 const categoryController = {
-    getAllCategory: async(req, res) => {
+    getCategories: async(req, res) => {
         try {
-            const result = await categoryModel.getAllCategory(req)
+            const result = await getCategories(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    addNewCategory: async(req, res) => {
+    createCategory: async(req, res) => {
         try {
-            const result = await categoryModel.addNewCategory(req)
+            const result = await createCategory(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
@@ -21,7 +27,7 @@ const categoryController = {
 
     getCategoryById: async(req, res) => {
         try {
-            const result = await categoryModel.getCategoryById(req.params.id)
+            const result = await getCategoryById(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
@@ -30,7 +36,7 @@ const categoryController = {
 
     getArticlesByCategoryId: async(req, res) => {
         try {
-            const result = await categoryModel.getArticlesByCategoryId(req)
+            const result = await getArticlesByCategoryId(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
@@ -39,7 +45,7 @@ const categoryController = {
 
     getRecommendedArticlesByCategoryId: async(req, res) => {
         try {
-            const result = await categoryModel.getRecommendedArticlesByCategoryId(req)
+            const result = await getRecommendedArticlesByCategoryId(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
@@ -48,16 +54,16 @@ const categoryController = {
 
     deleteCategoryById: async(req, res) => {
         try {
-            const result = await categoryModel.deleteCategoryById(req.params.id)
+            const result = await deleteCategoryById(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);
         }
     },
 
-    updateCategory: async(req, res) => {
+    patchCategoryById: async(req, res) => {
         try {
-            const result = await categoryModel.updateCategory(req)
+            const result = await categoryModel.patchCategoryById(req)
             res.status(result.statusCode).send(result);
         } catch (error) {
             res.status(error.statusCode).send(error);

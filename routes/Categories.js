@@ -1,15 +1,16 @@
 const route = require('express').Router()
-const categoryController = require('../controllers/Category')
-const formUpload = require('../helpers/formUpload')
-// const verifyToken = require('../helpers/verifyToken')
+const { createCategory, patchCategoryById, getCategoryById, getArticlesByCategoryId, 
+    getRecommendedArticlesByCategoryId, getCategories, deleteCategoryById
+} = require('../controllers/Category')
+const { uploadCategoryCover } = require('../helpers/formUpload')
 
-route.post('/', formUpload.uploadCategoryCover, categoryController.addNewCategory)
-route.patch('/:id', formUpload.uploadCategoryCover, categoryController.updateCategory) 
-route.get('/:id', categoryController.getCategoryById)
-route.get('/list/:id', categoryController.getArticlesByCategoryId)
-route.get('/recommend/:id', categoryController.getRecommendedArticlesByCategoryId)
-route.get('/', categoryController.getAllCategory)
-route.delete('/:id', categoryController.deleteCategoryById)
+route.post('/', uploadCategoryCover, createCategory)
+route.patch('/:id', uploadCategoryCover, patchCategoryById) 
+route.get('/:id', getCategoryById)
+route.get('/list/:id', getArticlesByCategoryId)
+route.get('/recommend/:id', getRecommendedArticlesByCategoryId)
+route.get('/', getCategories)
+route.delete('/:id', deleteCategoryById)
 
 
 module.exports=route
