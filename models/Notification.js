@@ -1,5 +1,6 @@
 const pg = require('../helpers/connect_db');
-const fromResponse = require('../helpers/formResponse');
+const { formError, formSuccess } = require('../helpers/formResponse');
+
 
 const notifModel = {
     getAllNotif: (req) => {
@@ -7,15 +8,14 @@ const notifModel = {
         return new Promise((resolve, reject) => {
             pg.query(`SELECT * from notification_list LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
                 if (result.rows.length < 0) {
-                    reject(fromResponse("notification not found", 400))
+                    reject(formError("notification not found", 400))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all notification success", 200, result.rows));
+                    resolve(formSuccess("Get all notification success", 200, result.rows));
                 } else {
-                    reject(fromResponse("Get all notification failed", 500));
+                    reject(formError("Get all notification failed", 500));
                 }
-            }
-            );
+            });
         });
     },
 
@@ -24,12 +24,12 @@ const notifModel = {
             pg.query(`SELECT * FROM notification_list WHERE id=${request}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Notification not found", 400));
+                        reject(formError("Notification not found", 400));
                     } else {
-                        resolve(fromResponse("Get notification success", 200, result.rows[0]));
+                        resolve(formSuccess("Get notification success", 200, result.rows[0]));
                     }
                 } else {
-                    reject(fromResponse("Get notification failed", 500));
+                    reject(formError("Get notification failed", 500));
                 }
             });
         });
@@ -42,13 +42,13 @@ const notifModel = {
             ORDER BY n.created_at DESC`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Notification list by user id not found", 400));
+                        reject(formError("Notification list by user id not found", 400));
                     } else {
 
-                        resolve(fromResponse("Get Notification list by user id success", 200, result.rows));
+                        resolve(formSuccess("Get Notification list by user id success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get Notification list by user id failed", 500));
+                    reject(formError("Get Notification list by user id failed", 500));
                 }
             });
         });
@@ -65,20 +65,20 @@ const notifModel = {
     //                     ORDER BY n.created_at DESC`, (error, res) => {
     //                     if (!error) {
     //                         if (res.rows.length < 1 && result.rows.length < 1) {
-    //                             reject(fromResponse("Notification list by user id not found", 400));
+    //                             reject(formError("Notification list by user id not found", 400));
     //                         } else {
     //                             const newData = {
     //                                 published: result.rows
     //                             }
     //                             const data = [...res.rows, newData]
-    //                             resolve(fromResponse("Get Notification list by user id success", 200, data));
+    //                             resolve(formSuccess("Get Notification list by user id success", 200, data));
     //                         }
     //                     } else {
-    //                         reject(fromResponse("Get Notification list by user id failed", 500));
+    //                         reject(formError("Get Notification list by user id failed", 500));
     //                     }
     //                 });
     //             } else {
-    //                 reject(fromResponse("Get Notification list by user id failed", 500));
+    //                 reject(formError("Get Notification list by user id failed", 500));
     //             }
     //         });
     //     });
@@ -90,18 +90,18 @@ const notifModel = {
             pg.query(`SELECT * FROM notification_list WHERE id=${request.query.id}`, (error, res) => {
                 if (!error) {
                     if (res.rows.length < 1) {
-                        reject(fromResponse("Notification not found", 400));
+                        reject(formError("Notification not found", 400));
                     } else {
                         pg.query(`DELETE FROM notification_list WHERE id=${request.query.id} RETURNING *`, (err, result) => {
                             if (!err) {
-                                resolve(fromResponse('Delete Notification success', 200, result.rows[0]));
+                                resolve(formSuccess('Delete Notification success', 200, result.rows[0]));
                             } else {
-                                reject(fromResponse('Delete Notification failed', 500));
+                                reject(formError('Delete Notification failed', 500));
                             }
                         });
                     }
                 } else {
-                    reject(fromResponse('Delete Notification failed', 500));
+                    reject(formError('Delete Notification failed', 500));
                 }
             });
             // }
@@ -110,18 +110,18 @@ const notifModel = {
             //     pg.query(`SELECT * FROM notification_list WHERE id IN (${req2})`, (error, res) => {
             //         if (!error) {
             //             if (res.rows.length < 1) {
-            //                 reject(fromResponse("Notification not found", 400));
+            //                 reject(formError("Notification not found", 400));
             //             } else {
             //                 pg.query(`DELETE FROM notification_list WHERE id IN (${req2}) RETURNING *`, (err, result) => {
             //                     if (!err) {
-            //                         resolve(fromResponse('Delete Notification success', 200, result.rows));
+            //                         resolve(formSuccess('Delete Notification success', 200, result.rows));
             //                     } else {
-            //                         reject(fromResponse('Delete Notification failed', 500));
+            //                         reject(formError('Delete Notification failed', 500));
             //                     }
             //                 });
             //             }
             //         } else {
-            //             reject(fromResponse('Delete Notification failed', 500));
+            //             reject(formError('Delete Notification failed', 500));
             //         }
             //     });
             // }

@@ -1,18 +1,18 @@
 const pg = require('../helpers/connect_db');
-const fromResponse = require('../helpers/formResponse');
 const fs = require('fs');
+const { formError, formSuccess } = require('../helpers/formResponse');
 
 const articleModel = {
     getAllArticle: (req) => {
         return new Promise((resolve, reject) => {
             pg.query(`SELECT * from articles`, (err, result) => {
                 if (result.rows.length < 0) {
-                    reject(fromResponse("Articles not found", 400))
+                    reject(formError("Articles not found", 400))
                 }
                 if (!err) {
-                    resolve(fromResponse("Get all Articles success", 200, result.rows));
+                    resolve(formSuccess("Get all Articles success", 200, result.rows));
                 } else {
-                    reject(fromResponse("Get all Articles failed", 500));
+                    reject(formError("Get all Articles failed", 500));
                 }
             }
             );
@@ -30,18 +30,18 @@ const articleModel = {
                         pg.query(`INSERT INTO articles(category_id, author_id, article_cover, article_title, article_content, status, created_at)
                                     VALUES(${category_id}, ${author_id}, '/upload/article_cover/${photos}', '${article_title}', '${article_content}', 'pending','now()') RETURNING *`, (err) => {
                             if (!err) {
-                                resolve(fromResponse("Add article success", 200, result.rows[0]));
+                                resolve(formSuccess("Add article success", 200, result.rows[0]));
                             } else {
                                 console.log(err)
-                                reject(fromResponse("Add article Failed", 500));
+                                reject(formError("Add article Failed", 500));
                             }
                         }
                         );
                     } else {
-                        reject(fromResponse("Article exist", 400));
+                        reject(formError("Article exist", 400));
                     }
                 } else {
-                    reject(fromResponse("Add article failed", 500));
+                    reject(formError("Add article failed", 500));
                 }
             }
             );
@@ -55,12 +55,12 @@ const articleModel = {
             u.role, u.name FROM articles as a JOIN users as u ON a.author_id = u.id WHERE a.id=${request}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get article success", 200, result.rows[0]));
+                        resolve(formSuccess("Get article success", 200, result.rows[0]));
                     }
                 } else {
-                    reject(fromResponse("Get article failed", 500));
+                    reject(formError("Get article failed", 500));
                 }
             });
         });
@@ -72,12 +72,12 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE publish_date IS NOT NULL ORDER BY publish_date DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get latest article success", 200, result.rows));
+                        resolve(formSuccess("Get latest article success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get latest article failed", 500));
+                    reject(formError("Get latest article failed", 500));
                 }
             });
         });
@@ -89,12 +89,12 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE publish_date IS NOT NULL ORDER BY article_title ASC LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get article sort by title asc success", 200, result.rows));
+                        resolve(formSuccess("Get article sort by title asc success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get article sort by title asc failed", 500));
+                    reject(formError("Get article sort by title asc failed", 500));
                 }
             });
         });
@@ -106,12 +106,12 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE publish_date IS NOT NULL ORDER BY article_title DESC LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get article sort by title desc success", 200, result.rows));
+                        resolve(formSuccess("Get article sort by title desc success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get article sort by title desc failed", 500));
+                    reject(formError("Get article sort by title desc failed", 500));
                 }
             });
         });
@@ -123,12 +123,12 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE publish_date IS NOT NULL ORDER BY publish_date DESC LIMIT ${limit}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get article sort by last added success", 200, result.rows));
+                        resolve(formSuccess("Get article sort by last added success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get article sort by last added failed", 500));
+                    reject(formError("Get article sort by last added failed", 500));
                 }
             });
         });
@@ -140,12 +140,12 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE publish_date IS NOT NULL ORDER BY updated_at DESC LIMIT ${limit}`, (err, result) => {
                 if (!err) {
                     if (result.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
-                        resolve(fromResponse("Get article sort by last modified success", 200, result.rows));
+                        resolve(formSuccess("Get article sort by last modified success", 200, result.rows));
                     }
                 } else {
-                    reject(fromResponse("Get article sort by last modified failed", 500));
+                    reject(formError("Get article sort by last modified failed", 500));
                 }
             });
         });
@@ -156,18 +156,18 @@ const articleModel = {
             pg.query(`SELECT * FROM articles WHERE id=${request}`, (error, res) => {
                 if (!error) {
                     if (res.rows.length < 1) {
-                        reject(fromResponse("Article not found", 400));
+                        reject(formError("Article not found", 400));
                     } else {
                         pg.query(`DELETE FROM articles WHERE id=${request} RETURNING *`, (err, result) => {
                             if (!err) {
-                                resolve(fromResponse('Delete article success', 200, result.rows[0]));
+                                resolve(formSuccess('Delete article success', 200, result.rows[0]));
                             } else {
-                                reject(fromResponse('Delete article failed', 500));
+                                reject(formError('Delete article failed', 500));
                             }
                         });
                     }
                 } else {
-                    reject(fromResponse('Delete article failed', 500));
+                    reject(formError('Delete article failed', 500));
                 }
             });
         })
@@ -177,7 +177,7 @@ const articleModel = {
         return new Promise((resolve, reject) => {
             pg.query(`SELECT * FROM articles WHERE id = '${req.params.id}'`, (error, result) => {
                 if (result.rows == '' || result.rows.length < 1) {
-                    reject(fromResponse("article id not found", 400));
+                    reject(formError("article id not found", 400));
                 }
                 if (!error) {
                     const file = req.file.filename ? `/upload/article_cover/${req.file.filename}` : result.rows[0].article_cover
@@ -205,16 +205,16 @@ const articleModel = {
                                     let iss_published = true;
                                     pg.query(`INSERT INTO notification_list(user_id,is_published,created_at,notif) VALUES(${author_id}, ${iss_published}, 'now()', 'Your article has been published')`, (error1) => {
                                         if(!error1){
-                                            resolve(fromResponse(`update article id ${id} success`, 200, response.rows[0]));
+                                            resolve(formSuccess(`update article id ${id} success`, 200, response.rows[0]));
                                         }else{
-                                            reject(fromResponse("update data failed", 500));
+                                            reject(formError("update data failed", 500));
                                         }
                                     })
                                 }else{
-                                    resolve(fromResponse(`update article id ${id} success`, 200, response.rows[0]));
+                                    resolve(formSuccess(`update article id ${id} success`, 200, response.rows[0]));
                                 }
                             } else {
-                                reject(fromResponse("update data failed", 500));
+                                reject(formError("update data failed", 500));
                             }
                         })
                     } else {
@@ -224,21 +224,21 @@ const articleModel = {
                                     let iss_published = true;
                                     pg.query(`INSERT INTO notification_list(user_id,is_published,created_at,notif) VALUES(${author_id}, ${iss_published}, 'now()', 'Your article has been published')`, (error1) => {
                                         if(!error1){
-                                            resolve(fromResponse(`update article id ${id} success`, 200, response.rows[0]));
+                                            resolve(formSuccess(`update article id ${id} success`, 200, response.rows[0]));
                                         }else{
-                                            reject(fromResponse("update data failed", 500));
+                                            reject(formError("update data failed", 500));
                                         }
                                     })
                                 }else{
-                                    resolve(fromResponse(`update article id ${id} success`, 200, response.rows[0]));
+                                    resolve(formSuccess(`update article id ${id} success`, 200, response.rows[0]));
                                 }
                             } else {
-                                reject(fromResponse("update data failed", 500));
+                                reject(formError("update data failed", 500));
                             }
                         })
                     }
                 } else {
-                    reject(fromResponse("update data failed", 500));
+                    reject(formError("update data failed", 500));
                 }
             })
         })
@@ -249,12 +249,12 @@ const articleModel = {
         return new Promise((resolve, reject) => {
           pg.query(`SELECT * FROM articles WHERE LOWER(article_title) LIKE '%${title.toLowerCase()}%' ORDER BY article_title ASC LIMIT ${limit} OFFSET ${(page - 1) * limit}`, (err, result) => {
             if (result.rows.length < 1) {
-              reject(fromResponse("articles not found", 400))
+              reject(formError("articles not found", 400))
             }
             if (!err) {
-              resolve(fromResponse("Succses search articles by title", 200, result.rows))
+              resolve(formSuccess("Succses search articles by title", 200, result.rows))
             } else {
-              reject(fromResponse("Error occrous when searching articles", 500))
+              reject(formError("Error occrous when searching articles", 500))
             }
           })
         })
