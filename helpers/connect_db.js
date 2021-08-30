@@ -10,7 +10,9 @@ const pg = new Pool({
   ssl: true,
   dialect: 'postgres',
   dialectOptions: {
-    "ssl": {"require":true }
+    "ssl": {
+      "rejectUnauthorized": false
+    }
   }
 });
 
