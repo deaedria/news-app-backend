@@ -3,8 +3,11 @@ const isDataEmpty = require('../helpers/checkDataEmpty');
 const hash = require('../helpers/hashPassword');
 const unlinkPhoto = require('../helpers/unlinkPhoto');
 const { formError, formSuccess } = require('../helpers/formResponse');
-const getNewBody = require('../helpers/user/newBodyForPatchUser')
-const { getAll, getById, deleteById, getByEmail, createUser, updateUser } = require('../helpers/user/queryUser');
+const getNewBody = require('../helpers/user/newBodyUpdate')
+const { getAll, getById, deleteById, getByEmail, createUser, updateUser, updateUserWithNewPassword } = require('../helpers/user/queryUser');
+const UserBuilder = require('../helpers/user/userBuilder');
+const formBody = require('../helpers/user/formBodyForUpdate');
+const formFile = require('../helpers/user/formFileForUpdate');
 
 const userModel = {
     getUsers: (req) => {
@@ -14,24 +17,39 @@ const userModel = {
                 const { isEmpty } = isDataEmpty(result)
                 if (isEmpty) reject(formError("Data Not Found", 404))
                 if (err) reject(formError("Get all Users failed", 500))
-                resolve(formSuccess("Get all Users success", 200, result.rows))
+                resolve(formSuccess("Get all Users success", 200, result?.rows))
             });
         });
     },
 
     createUser: (req) => {
         return new Promise((resolve, reject) => {
-            const { body: { email, password, phone_number, about, name, username, job, is_author, role } } = req;
-            const photos = req.file.filename
+            const { body: { email, password, phone_number, about, name, username, job, role } } = req;
+            const photos = req.file?.filename
             pg.query(getByEmail(email), (error, result) => {
                 if (error) reject(formError("Add user failed", 500))
                 const { isEmpty } = isDataEmpty(result)
-                if (!isEmpty) reject(formError("User exist", 400))
+                // if (!isEmpty) reject(formError("User exist", 400))
+                const user = new UserBuilder()
+                user.setEmail(email)
+                    .setName(name)
+                    .setPhone(phone_number)
+                    .setAbout(about)
+                    .setUsername(username)
+                    .setJob(job)
+                    .setRole(role)
+                    .setPhoto(photos)
+                    .build()
+                const {
+                    user: { _email, _phoneNumber, _about, _name, _username, _job, _photoProfile },
+                    role: { _type, _isAuthor }
+                } = user
                 hash(password).then((hashValue) => {
-                    pg.query(createUser(email, hashValue, phone_number, photos, about, name, username, job, is_author, role), (err) => {
-                        if (err) reject(formError("Add user Failed", 500))
-                        resolve(formSuccess("Add user success", 201))
-                    })
+                    pg.query(createUser(_email, hashValue, _phoneNumber, _photoProfile,
+                        _about, _name, _username, _job, _isAuthor, _type), (err) => {
+                            if (err) reject(formError("Add user Failed", 500))
+                            resolve(formSuccess("Add user success", 201))
+                        })
                 })
             });
         });
@@ -44,7 +62,7 @@ const userModel = {
                 if (err) reject(formError("Get user failed", 500))
                 const { isEmpty } = isDataEmpty(result)
                 if (isEmpty) reject(formError("User not found", 404))
-                resolve(formSuccess("Get user success", 200, result.rows[0]));
+                resolve(formSuccess("Get user success", 200, result?.rows[0]));
             });
         });
     },
@@ -70,18 +88,29 @@ const userModel = {
             pg.query(getById(id), (error, result) => {
                 const { isEmpty } = isDataEmpty(result)
                 if (isEmpty) reject(formError("user id not found", 404))
-                if (error) reject(formResponse("update data failed", 500));
-                const { email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id } = getNewBody(req, result)
-                if (photo_profile != result.rows[0].photo_profile) {
+                if (error) reject(formResponse("update data failed", 500))
+                formBody(req, result)
+                const { email, phone_number, about, name, username, job, is_author, role, password } = formBody(req, result)
+                const { photo_profile } = formFile(req, result)
+                // const { email, phone_number, about, name, username, job, is_author, role, password, photo_profile } = getNewBody()
+                if (photo_profile != result.rows[0]?.photo_profile) {
                     unlinkPhoto(result.rows[0].photo_profile)
                     pg.query(updateUser({ email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id }), (err, response) => {
                         if (err) reject(formError("update data failed", 500));
-                        resolve(formSuccess(`update user success`, 200, response.rows[0]));
+                        resolve(formSuccess(`update user success`, 200, response?.rows[0]));
+                    })
+                }
+                if (password != result.rows[0]?.password) {
+                    hash(password).then((hashValue) => {
+                        pg.query(updateUserWithNewPassword({ email, phone_number, about, name, username, job, is_author, role, hashValue, photo_profile, id }), (err, response) => {
+                            if (err) reject(formError("update data failed", 500));
+                            resolve(formSuccess(`update user success`, 200, response?.rows[0]));
+                        })
                     })
                 }
                 pg.query(updateUser({ email, phone_number, about, name, username, job, is_author, role, password, photo_profile, id }), (err, response) => {
                     if (err) reject(formError("update data failed", 500));
-                    resolve(formSuccess(`update user success`, 200, response.rows[0]));
+                    resolve(formSuccess(`update user success`, 200, response?.rows[0]));
                 })
             })
         })
