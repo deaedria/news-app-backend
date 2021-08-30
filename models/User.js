@@ -5,7 +5,7 @@ const unlinkPhoto = require('../helpers/unlinkPhoto');
 const { formError, formSuccess } = require('../helpers/formResponse');
 const getNewBody = require('../helpers/user/newBodyUpdate')
 const { getAll, getById, deleteById, getByEmail, createUser, updateUser, updateUserWithNewPassword } = require('../helpers/user/queryUser');
-const UserBuilder = require('../helpers/user/userBuilder');
+// const UserBuilder = require('../helpers/user/userBuilder');
 const formBody = require('../helpers/user/formBodyForUpdate');
 const formFile = require('../helpers/user/formFileForUpdate');
 
@@ -24,29 +24,15 @@ const userModel = {
 
     createUser: (req) => {
         return new Promise((resolve, reject) => {
-            const { body: { email, password, phone_number, about, name, username, job, role } } = req;
+            const { body: { email, password, phone_number, about, name, username, job, role, isAuthor } } = req;
             const photos = req.file?.filename
             pg.query(getByEmail(email), (error, result) => {
                 if (error) reject(formError("Add user failed", 500))
                 const { isEmpty } = isDataEmpty(result)
                 if (!isEmpty) reject(formError("User exist", 400))
-                const user = new UserBuilder()
-                user.setEmail(email)
-                    .setName(name)
-                    .setPhone(phone_number)
-                    .setAbout(about)
-                    .setUsername(username)
-                    .setJob(job)
-                    .setRole(role)
-                    .setPhoto(photos)
-                    .build()
-                const {
-                    user: { _email, _phoneNumber, _about, _name, _username, _job, _photoProfile },
-                    role: { _type, _isAuthor }
-                } = user
                 hash(password).then((hashValue) => {
-                    pg.query(createUser(_email, hashValue, _phoneNumber, _photoProfile,
-                        _about, _name, _username, _job, _isAuthor, _type), (err) => {
+                    pg.query(createUser(email, hashValue, phone_number, photos,
+                        about, name, username, job, isAuthor, role), (err) => {
                             if (err) reject(formError("Add user Failed", 500))
                             resolve(formSuccess("Add user success", 201))
                         })

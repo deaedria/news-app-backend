@@ -32,7 +32,7 @@ const queryUser = {
                 WHERE email='${email}' LIMIT 1`
     },
 
-    createUser: (_email, hashValue, _phoneNumber, _photoProfile, _about, _name, _username, _job, _isAuthor, _type) => {
+    createUser: (email, hashValue, phone_number, photos, about, name, username, job, isAuthor, role) => {
         return `INSERT INTO users (email, password,
                                    phone_number,
                                    photo_profile,
@@ -40,7 +40,7 @@ const queryUser = {
                                    username, job,
                                    is_author, role,
                                    created_at)
-                VALUES('${_email}','${hashValue}','${_phoneNumber}','${_photoProfile}','${_about}','${_name}','${_username}','${_job}', ${_isAuthor},'${_type}','now()')
+                VALUES('${email}','${hashValue}','${phone_number}','${photos}','${about}','${name}','${username}','${job}', ${isAuthor},'${role}','now()')
                 RETURNING *`
     },
 
