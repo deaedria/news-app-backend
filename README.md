@@ -1,5 +1,5 @@
 ## News-App-Backend
-This is a ExpressJs-based API for [frontend project](https://github.com/deaedria/news-app-frontend.git). It uses PostgreSQL as its database
+This is a ExpressJs-based API for [frontend project](https://github.com/deaedria/news-app-frontend.git). It uses PostgreSQL as its database. In some parts of this API development, there were implementations such as KISS, DRY, and also some endpoints that were tested for performance. For just information, there was also an explanation of related definitions. Please see it [here](https://difficult-jay-2a1.notion.site/Documentation-188d1520b1c64070bbe21e52b2be1a3c) for details. For another example of API development using SOLID with OOP, you can check it out in the repository [here]().
 
 ## Getting started
 
@@ -13,7 +13,7 @@ To get the Node server running locally:
 
 ## Database
 
-Open [database](https://drive.google.com/file/d/10pGBWTXUseKZWZRQAqZMtQubNuNl6Max/view?usp=sharing) and the [schema](https://drawsql.app/dea/diagrams/Kurangguru)
+Open [schema](https://drawsql.app/dea/diagrams/Kurangguru)
 
 ## Folder Structure
 
@@ -50,4 +50,4 @@ Open [database](https://drive.google.com/file/d/10pGBWTXUseKZWZRQAqZMtQubNuNl6Ma
     
 ## Documentation
 
-Open [documentation](https://documenter.getpostman.com/view/14707903/TzeTJp9b) 
+Open Postman [documentation](https://documenter.getpostman.com/view/14707903/TzeTJp9b) 
