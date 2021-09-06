@@ -1,5 +1,5 @@
 ## News-App-Backend
-This is a ExpressJs-based API for [frontend project](https://github.com/deaedria/news-app-frontend.git). It uses PostgreSQL as its database. In some parts of this API development, there were implementations such as KISS, DRY, and also some endpoints that were tested for performance. For just information, there's also an explanation of related definitions. Please see it [here](https://difficult-jay-2a1.notion.site/Documentation-188d1520b1c64070bbe21e52b2be1a3c) for details. For another example of API development using SOLID with OOP, you can check it out in the repository [here](https://github.com/deaedria/shop-backend.git).
+This is a ExpressJs-based API for [frontend project](https://github.com/deaedria/news-app-frontend.git). It uses PostgreSQL as its database. In some parts of this API development, there were implementations such as SOLID, KISS, DRY, and also some endpoints that were tested for performance and unit. For just information, there's also an explanation of related definitions. Please see it [here](https://difficult-jay-2a1.notion.site/Documentation-188d1520b1c64070bbe21e52b2be1a3c) for details. For another example of API development using SOLID with OOP, you can check it out in the repository [here](https://github.com/deaedria/shop-backend.git).
 
 ## Getting started
 
