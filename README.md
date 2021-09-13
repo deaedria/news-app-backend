@@ -13,7 +13,7 @@ To get the Node server running locally:
 
 ## Database
 
-Open [schema](https://drawsql.app/dea/diagrams/Kurangguru)
+Open [schema](https://drawsql.app/dea/diagrams/kurang-guru/embed)
 
 ## Folder Structure
 
